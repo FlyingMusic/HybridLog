@@ -2,6 +2,8 @@
 #define _HYBRID_LOG_IMP_
 
 #include <list>
+#include <map>
+#include "hlog.h"
 
 #define NORMAL_LOG 0x01
 #define ASYNC_LOG  0x02
@@ -12,6 +14,8 @@ public:
     virtual int init(const char *log_file, int log_level, int log_size);
     virtual int write(int log_level, const char *log_context);
     virtual void close();
+protected:
+    std::map<DLOG_LEVEL, int> m_level2fd;
 };
 
 class NormalLogWriter : public LogWriter {

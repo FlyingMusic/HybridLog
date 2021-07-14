@@ -12,6 +12,7 @@ void LogWriter::close() {
 
 
 int NormalLogWriter::init(const char *log_file, int log_level, int log_size) {
+    
     return 0;
 }
 int NormalLogWriter::write(int log_level, const char *log_context) {
