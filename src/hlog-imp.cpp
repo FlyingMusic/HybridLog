@@ -7,8 +7,7 @@ int LogWriter::init(const char *log_file, int log_level, int log_size) {
 int LogWriter::write(int log_level, const char *log_context) {
     return 0;
 }
-int LogWriter::close() {
-    return 0;
+void LogWriter::close() {
 }
 
 
@@ -18,8 +17,7 @@ int NormalLogWriter::init(const char *log_file, int log_level, int log_size) {
 int NormalLogWriter::write(int log_level, const char *log_context) {
     return 0;
 }
-int NormalLogWriter::close() {
-    return 0;
+void NormalLogWriter::close() {
 }
 
 int AsyncLogWriter::init(const char *log_file, int log_level, int log_size) {
@@ -28,8 +26,7 @@ int AsyncLogWriter::init(const char *log_file, int log_level, int log_size) {
 int AsyncLogWriter::write(int log_level, const char *log_context) {
     return 0;
 }
-int AsyncLogWriter::close() {
-    return 0;
+void AsyncLogWriter::close() {
 }
 
 int NetLogWriter::init(const char *log_file, int log_level, int log_size) {
@@ -38,8 +35,7 @@ int NetLogWriter::init(const char *log_file, int log_level, int log_size) {
 int NetLogWriter::write(int log_level, const char *log_context) {
     return 0;
 }
-int NetLogWriter::close() {
-    return 0;
+void NetLogWriter::close() {
 }
 
 //LogManager
@@ -62,6 +58,7 @@ int LogManager::initLogWriter(const char* log_file, int log_level, int log_size)
     for ( ; iter != m_logWriter.end(); ++iter) {
         (*iter)->init(log_file, log_level, log_size);
     }
+    return 0;
 }
 void LogManager::dispatchLog(int log_level, const char *log_context) {
     std::list<LogWriter *>::iterator iter = m_logWriter.begin();
@@ -69,10 +66,9 @@ void LogManager::dispatchLog(int log_level, const char *log_context) {
         (*iter)->write(log_level, log_context);
     }
 }
-int LogManager::closeLogWriter() {
+void LogManager::closeLogWriter() {
     std::list<LogWriter *>::iterator iter = m_logWriter.begin();
     for ( ; iter != m_logWriter.end(); ++iter) {
         (*iter)->close();
     }
 }
-#endif

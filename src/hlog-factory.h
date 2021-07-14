@@ -4,6 +4,7 @@
 #include "hlog-imp.h"
 
 class LogWriterFactory {
+public:
     static LogWriter *createLogWriter(int type);
 };
 #endif

@@ -1,6 +1,14 @@
 #include "hlog.h"
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+#include <stdarg.h>
+#include <sys/time.h>
+#include "hlog-imp.h"
+#include "hlog-factory.h"
 
 static LogManager *g_logMgr = NULL;
+const char *g_level_name[] = {"NO-SET", "DEBUG", "INFO", "NOTICE", "WARN", "ERROR"};
 
 int set_log_level_file(const char* log_file, int log_level, int log_size, bool singleLevel, int log_mode) {
     if (NULL == g_logMgr) {
@@ -30,10 +38,6 @@ int set_log_level_file(const char* log_file, int log_level, int log_size, bool s
 }
 
 static void log_format(int level, const char *prefix, const char *func, const char *fmt, va_list ap) {
-    if(g_threadLog){
-        if(!g_threadLog->isLogLevel(level))
-            return;
-    }
     char new_format[1024] = {0};
     char buffer[1024] = {0};
     if (prefix) {
