@@ -48,8 +48,9 @@ void log_decoder_vv(int level, const char *prefix, const char *func, const char 
  * default limit is 10MB
  * @param: singleLevel: Whether it is a singleLevel mode, if false, every log level
  * correspond to a log instance, namely one level only output one file. */
-int set_log_level_file(const char* log_file, int log_level, int log_size = 10, 
-        bool singleLevel = true, int log_mode = NORMAL_MODE);
+int set_log_level_file(const char* log_file, int log_level, int log_size = 10);
+
+int set_log_mode(int log_mode = NORMAL_MODE);
 
 
 /**

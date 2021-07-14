@@ -3,7 +3,6 @@
 
 #include <list>
 #include <map>
-#include "hlog.h"
 
 #define NORMAL_LOG 0x01
 #define ASYNC_LOG  0x02
@@ -15,7 +14,7 @@ public:
     virtual int write(int log_level, const char *log_context);
     virtual void close();
 protected:
-    std::map<DLOG_LEVEL, int> m_level2fd;
+    std::map<int, int> m_level2fd;
 };
 
 class NormalLogWriter : public LogWriter {
@@ -43,13 +42,14 @@ class LogManager {
 public:
     LogManager();
     ~LogManager();
-    int addLogWriter(LogWriter *log_writer);
-    int removeLogWriter(LogWriter *log_writer);
+    int addLogWriter(int log_mode);
+    int removeLogWriter(int log_mode);
     int initLogWriter(const char* log_file, int log_level, int log_size);
     void dispatchLog(int log_level, const char *log_context);
     void closeLogWriter();
+    typedef std::map<int, LogWriter *>::iterator mapIter;
 private:
-    std::list<LogWriter *> m_logWriter;
+    std::map<int, LogWriter *> m_logWriter;
 
 };
 
