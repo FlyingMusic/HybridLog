@@ -3,6 +3,9 @@
 
 #include <list>
 #include <map>
+#include <string.h>
+#include "ThreadPool.h"
+#include "concurrent_queue.h"
 
 #define NORMAL_LOG 0x01
 #define ASYNC_LOG  0x02
@@ -26,9 +29,28 @@ public:
 
 class AsyncLogWriter : public LogWriter {
 public:
+    AsyncLogWriter();
+    ~AsyncLogWriter();
     virtual int init(const char *log_file, int log_level, int log_size);
     virtual int write(int log_level, const char *log_context);
     virtual void close();
+    void threadFunc();
+    class async_log_st{
+    public:
+        int log_level; 
+        char log_context[1024];
+        async_log_st() : log_level(0){
+            memset(log_context, 0, sizeof(log_context)); 
+        }
+        bool operator<(const async_log_st& other) const {
+            return  this->log_level < other.log_level;
+        }
+    };
+private:
+    bool m_isFinish;
+    ThreadPool *m_threadPool;
+    std::map<int, int> m_level2fd;
+    concurrent_queue<async_log_st> m_queue;
 };
 
 class NetLogWriter : public LogWriter {

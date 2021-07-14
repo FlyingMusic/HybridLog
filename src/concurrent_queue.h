@@ -27,7 +27,7 @@ class concurrent_queue
 #ifdef  _DEBUG_CONCURRENT_QUEUE_
             printf("concurrent queue: duplicate data[%d]\n", item);
 #endif
-                return; // already exist
+                //return; // already exist
             }
             m_queue.push(item);
             m_set.insert(item);

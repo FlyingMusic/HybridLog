@@ -53,9 +53,11 @@ static void log_format(int level, const char *prefix, const char *func, const ch
     char buffer[1024] = {0};
     if (prefix) {
         snprintf(new_format, 1024, "%s", prefix);
+        //strcpy(new_format, prefix);
     }
     if (func) {
         snprintf(new_format + strlen(new_format), 1024 - strlen(new_format), "[%s] ", func);
+      //  strcpy(new_format + strlen(new_format), func);
     }
 
     char formatted[100] = {0};
@@ -67,10 +69,13 @@ static void log_format(int level, const char *prefix, const char *func, const ch
     strftime(formatted, sizeof(formatted), "%Y-%m-%d %H:%M:%S", &currentTime);
     if(new_format[0] != 0){
         snprintf(buffer, 1024, "%s,%03ld [%s] %s %s\n", formatted, nowtime.tv_usec/1000, g_level_name[level], new_format, fmt);
+        //strcpy(buffer, "hllll");
     }else{
         snprintf(buffer, 1024, "%s,%03ld [%s] %s\n", formatted, nowtime.tv_usec/1000, g_level_name[level], fmt);
+       // strcpy(buffer, "hllll");
     }
     vsnprintf(new_format, 1024, buffer, ap);
+   // strcpy(new_format, "hello hello\n");
     g_logMgr->dispatchLog(level, new_format);
     return;
 }
