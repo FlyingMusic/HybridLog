@@ -1,10 +1,14 @@
 #include "hlog.h"
 #include <time.h>    
 #include <stdio.h>    
+#include "Config.h"
 
 #define LOG_TEST_MODEL "TEST_MODEL"
 
 int main() {
+    Config *p_config = new Config();
+    delete p_config;
+    p_config = NULL;
 #if 0
     set_log_mode(NORMAL_MODE);
     set_log_level_file("normal.log", LEVEL_DEBUG, 10);

@@ -1,11 +1,6 @@
-project(core)
 
-add_library(${PROJECT_NAME} STATIC 
-    hlog.cpp
-    hlog-imp.cpp
-    ThreadPool.cpp
-    hlog-factory.cpp
-    utility.cpp
-    )
-target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR})
-
+SET(MODULES hlog config queue threadpool utility)
+foreach(module ${MODULES})
+    MESSAGE(STATUS "generate module ${module}")
+    add_subdirectory(${module})
+endforeach()
