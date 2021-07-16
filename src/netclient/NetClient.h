@@ -6,7 +6,7 @@
 class NetClient {
 public:
     int connect(const char *ip, int port);
-    int sendData();
+    int sendData(void *data, int len);
     int close();
 private:
     char m_ip[512];

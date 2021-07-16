@@ -74,7 +74,7 @@ char *Config::GetFilepath(){
         }
     }else {
         if(m_filename == NULL){
-            char *filepath = "./";
+            const char *filepath = "./";
             m_filepath = strdup(filepath);
             return m_filepath;
         }

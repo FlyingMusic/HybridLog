@@ -13,6 +13,8 @@
 
 class LogWriter {
 public:
+    LogWriter() {}
+    virtual ~LogWriter() {}
     virtual int init(const char *log_file, int log_level, int log_size);
     virtual int write(int log_level, const char *log_context);
     virtual void close();
