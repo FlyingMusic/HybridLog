@@ -5,6 +5,7 @@
 
 class LogClient {
 public:
+    int createConnection();
     int sendRequest();
     int recvResponce();
     int sendData();

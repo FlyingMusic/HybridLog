@@ -1,7 +1,6 @@
 project(config)
 
 add_library(${PROJECT_NAME} STATIC 
-    Config.cpp
     libconfigcpp.c++
     wincompat.h
     grammar.c

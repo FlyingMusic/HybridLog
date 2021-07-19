@@ -29,6 +29,7 @@ SET(CMAKE_C_FLAGS_DEBUG "$ENV{CFLAGS} ${CFLAGS}")
 SET(CMAKE_C_FLAGS_RELEASE "$ENV{CFLAGS} ${CFLAGS}")
 
 # global head files directory
+include_directories(include)
 
 # sub directory
 add_subdirectory(src)
