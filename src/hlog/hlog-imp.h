@@ -15,16 +15,17 @@ class LogWriter {
 public:
     LogWriter() {}
     virtual ~LogWriter() {}
-    virtual int init(const char *log_file, int log_level, int log_size);
+    virtual int init(const LogConfig *log_config = NULL);
     virtual int write(int log_level, const char *log_context);
     virtual void close();
 protected:
     std::map<int, int> m_level2fd;
+    LogConfig *m_logConfig;
 };
 
 class NormalLogWriter : public LogWriter {
 public:
-    virtual int init(const char *log_file, int log_level, int log_size);
+    virtual int init(const LogConfig *log_config);
     virtual int write(int log_level, const char *log_context);
     virtual void close();
 };
@@ -33,7 +34,7 @@ class AsyncLogWriter : public LogWriter {
 public:
     AsyncLogWriter();
     ~AsyncLogWriter();
-    virtual int init(const char *log_file, int log_level, int log_size);
+    virtual int init(const LogConfig *log_config);
     virtual int write(int log_level, const char *log_context);
     virtual void close();
     void threadFunc();
@@ -51,13 +52,12 @@ public:
 private:
     bool m_isFinish;
     ThreadPool *m_threadPool;
-    std::map<int, int> m_level2fd;
     concurrent_queue<async_log_st> m_queue;
 };
 
 class NetLogWriter : public LogWriter {
 public:
-    virtual int init(const char *log_file, int log_level, int log_size);
+    virtual int init(const LogConfig *log_config);
     virtual int write(int log_level, const char *log_context);
     virtual void close();
 };
@@ -66,15 +66,17 @@ class LogManager {
 public:
     LogManager();
     ~LogManager();
+    int loadConfig(const char *conf_path);
+    LogConfig* getLogConfig();
     int addLogWriter(int log_mode);
     int removeLogWriter(int log_mode);
-    int initLogWriter(const char* log_file, int log_level, int log_size);
+    int initLogWriter(const LogConfig *log_config);
     void dispatchLog(int log_level, const char *log_context);
     void closeLogWriter();
     typedef std::map<int, LogWriter *>::iterator mapIter;
 private:
     std::map<int, LogWriter *> m_logWriter;
-
+    LogConfig *m_logConfig;
 };
 
 #endif

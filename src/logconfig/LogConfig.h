@@ -10,12 +10,18 @@ public:
     int loadConfig(const char *config_path);
     int getLogSize();
     int getMaxLevel();
+    bool getNormalMode();
+    bool getAsyncMode();
+    bool getNetMode();
     const char *getDebugLogPath();
     const char *getInfoLogPath();
     const char *getNoticeLogPath();
     const char *getWarnLogPath();
     const char *getErrorLogPath();
 private:
+    bool m_isNormalModeOn;
+    bool m_isAsyncModeOn;
+    bool m_isNetModeOn;
     int m_logSize;
     int m_maxLevel;
     char m_debugLogPath[1024];

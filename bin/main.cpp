@@ -60,10 +60,13 @@ int main(int argc, char *argv[]) {
     double costtime = (double)(end-start) / CLOCKS_PER_SEC;
     printf("normal time cost: %lf\n", costtime);
 #endif 
+    hlog_init(config_path);
+#if 0
     set_log_mode(ASYNC_MODE);
     set_log_level_file("async.log", LEVEL_DEBUG, 10);
     set_log_level_file("async.log", LEVEL_ERROR, 10);
     set_log_level_file("async.log", LEVEL_INFO, 10);
+#endif
     clock_t start = clock(); 
     for (int i = 0; i < 1000000; ++i) {
         LOG_D(LOG_TEST_MODEL, "hello debug");

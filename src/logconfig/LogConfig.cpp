@@ -6,7 +6,8 @@
 
 LogConfig::LogConfig() : 
     m_logSize(0),
-    m_maxLevel(0) 
+    m_maxLevel(0),
+
 {
     memset(m_debugLogPath, 0, sizeof(m_debugLogPath));
     memset(m_infoLogPath, 0, sizeof(m_infoLogPath));
@@ -31,6 +32,9 @@ int LogConfig::loadConfig(const char *config_path) {
     }
     config.GetValue("LOG_SIZE", m_logSize, 10);
     config.GetValue("LOG_LEVEL", m_maxLevel, LEVEL_MAX);
+    config.GetValue("NORMAL_MODE", m_isNormalModeOn, false);
+    config.GetValue("ASYNC_MODE", m_isAsyncModeOn, false);
+    config.GetValue("NET_MODE", m_isNetModeOn, false);
     config.GetString("DEBUG_LOG_PATH", m_debugLogPath, "./debug.log");
     config.GetString("INFO_LOG_PATH", m_infoLogPath, "./info.log");
     config.GetString("NOTICE_LOG_PATH", m_noticeLogPath, "./notice.log");
@@ -46,7 +50,15 @@ int LogConfig::getLogSize() {
 int LogConfig::getMaxLevel() {
     return m_maxLevel;
 }
-
+bool LogConfig::getNormalMode() {
+    return m_isNormalModeOn;
+}
+bool LogConfig::getAsyncMode() {
+    return m_isAsyncModeOn;
+}
+bool LogConfig::getNetMode() {
+    return m_isNetModeOn;
+}
 const char* LogConfig::getDebugLogPath() {
     return m_debugLogPath;
 }

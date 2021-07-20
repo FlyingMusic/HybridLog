@@ -9,43 +9,48 @@
 static LogManager *g_logMgr = NULL;
 const char *g_level_name[] = {"NO-SET", "DEBUG", "INFO", "NOTICE", "WARN", "ERROR"};
 
-int set_log_mode(int log_mode) {
+int hlog_init(const char *conf_file) {
+    if (NULL == conf_file) {
+        printf("hlog init param is NULL\n");
+        return -1;
+    }
     if (NULL == g_logMgr) {
         g_logMgr = new LogManager(); 
     }
-    int ret = 0;
-    if (NORMAL_MODE & log_mode) {
+    int ret = g_logMgr->loadConfig(conf_file);
+    if (0 != ret) {
+        printf("log manager load config failed\n");
+        return -1;
+    }
+    const LogConfig* log_config = g_logMgr->getLogConfig();
+    if (NULL == log_config) {
+        printf("log config in log manager is NULL\n");
+        return -1;
+    }
+    if (log_config->getNormalMode()) {
         ret = g_logMgr->addLogWriter(NORMAL_MODE);
-    } else {
-        ret = g_logMgr->removeLogWriter(NORMAL_MODE);
+        if (0 != ret) {
+            printf("add normal logwriter failed\n");
+        }
     }
-
-    if (ASYNC_MODE & log_mode) {
+    if (log_config->getAsyncMode()) {
         ret = g_logMgr->addLogWriter(ASYNC_MODE);
-    } else {
-        ret = g_logMgr->removeLogWriter(ASYNC_LOG);
+        if (0 != ret) {
+            printf("add async logwriter failed\n");
+        }
     }
-
-    if (NET_MODE & log_mode) {
+    if (log_config->getNetMode()) {
         ret = g_logMgr->addLogWriter(NET_MODE);
-    } else {
-        ret = g_logMgr->removeLogWriter(NET_LOG);
+        if (0 != ret) {
+            printf("add net logwriter failed\n");
+        }
     }
 
+    ret = g_logMgr->initLogWriter(log_config);
     if (0 != ret) {
-        printf("add log Writer failed!\n");
+        printf("init log writer failed!\n");
     }
-
-    return ret;
-}
-int set_log_level_file(const char* log_file, int log_level, int log_size) {
-    int ret = 0;
-    ret = g_logMgr->initLogWriter(log_file, log_level, log_size);
-    if (0 != ret) {
-        printf("init log Writer failed!\n");
-    }
-
-    return ret;
+    return 0;
 }
 
 static void log_format(int level, const char *prefix, const char *func, const char *fmt, va_list ap) {

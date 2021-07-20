@@ -12,7 +12,7 @@
 
 using namespace std;
 
-int LogWriter::init(const char *log_file, int log_level, int log_size) {
+int LogWriter::init(const LogConfig *log_config) {
     return 0;
 }
 int LogWriter::write(int log_level, const char *log_context) {
@@ -22,7 +22,9 @@ void LogWriter::close() {
 }
 
 
-int NormalLogWriter::init(const char *log_file, int log_level, int log_size) {
+int NormalLogWriter::init(const LogConfig *log_config) {
+    m_logConfig = log_config;
+
     if (false == createDirectory(log_file)) {
         printf("create directory[%s] error in normal log writer\n", log_file);
         return -1;
@@ -72,7 +74,7 @@ AsyncLogWriter::~AsyncLogWriter() {
 
 void* thread_func(void *arg);
 
-int AsyncLogWriter::init(const char *log_file, int log_level, int log_size) {
+int AsyncLogWriter::init(const LogConfig *log_config) {
     if (false == createDirectory(log_file)) {
         printf("create directory[%s] error in normal log writer\n", log_file);
         return -1;
@@ -133,7 +135,7 @@ void AsyncLogWriter::close() {
 
 }
 
-int NetLogWriter::init(const char *log_file, int log_level, int log_size) {
+int NetLogWriter::init(const LogConfig *log_config) {
     return 0;
 }
 int NetLogWriter::write(int log_level, const char *log_context) {
@@ -144,17 +146,32 @@ void NetLogWriter::close() {
 
 //LogManager
 LogManager::LogManager() {
-
+    m_logConfig = NULL;
 }
 LogManager::~LogManager() {
     closeLogWriter();
+}
+
+int LogManager::loadConfig(const char *conf_path) {
+    if (NULL == m_logConfig) {
+        m_logConfig = new LogConfig();
+    }
+    int ret = m_logConfig->loadConfig(conf_path);
+    if (0 != ret) {
+        printf("load config failed\n");
+        return -1;
+    }
+    return 0;
+}
+const LogConfig* getLogConfig() {
+    return m_logConfig;
 }
 int LogManager::addLogWriter(int log_mode) {
     mapIter iter = m_logWriter.find(log_mode);
     if (iter == m_logWriter.end()) {
         m_logWriter[log_mode] = LogWriterFactory::createLogWriter(log_mode);
     }
-    return 0;
+    return m_logWriter[log_mode] == NULL ? -1 : 0;
 }
 int LogManager::removeLogWriter(int log_mode) {
     mapIter iter = m_logWriter.find(log_mode);
@@ -165,10 +182,10 @@ int LogManager::removeLogWriter(int log_mode) {
     m_logWriter.erase(log_mode);
     return 0;
 }
-int LogManager::initLogWriter(const char* log_file, int log_level, int log_size) {
+int LogManager::initLogWriter() {
     mapIter iter = m_logWriter.begin();
     for ( ; iter != m_logWriter.end(); ++iter) {
-        iter->second->init(log_file, log_level, log_size);
+        iter->second->init(m_logConfig);
     }
     return 0;
 }
