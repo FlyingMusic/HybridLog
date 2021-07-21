@@ -7,9 +7,12 @@
 #include "ThreadPool.h"
 #include "concurrent_queue.h"
 
-#define NORMAL_LOG 0x01
-#define ASYNC_LOG  0x02
-#define NET_LOG    0x03
+typedef enum {
+    NORMAL_MODE = 0x0,
+    ASYNC_MODE,
+    NET_MODE,
+    MAX_MODE,
+} LogMode;
 
 class LogWriter {
 public:
@@ -21,10 +24,12 @@ public:
 protected:
     std::map<int, int> m_level2fd;
     LogConfig *m_logConfig;
+    LogMode m_logMode;
 };
 
 class NormalLogWriter : public LogWriter {
 public:
+    NormalLogWriter() : m_logMode(NORMAL_MODE){ }
     virtual int init(const LogConfig *log_config);
     virtual int write(int log_level, const char *log_context);
     virtual void close();

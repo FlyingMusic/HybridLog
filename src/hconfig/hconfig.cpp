@@ -1,7 +1,47 @@
-#include "LogConfig.h"
+#include "honfig.h"
 #include <string.h>
 #include "Config.h"
 #include "hlog.h"
+
+
+NormalLogConfig::NormalLogConfig() :
+    m_logSize(0),
+    m_maxLevel(0),
+    m_isOpen(false),
+{
+     memset(m_debugLogPath, 0, sizeof(m_debugLogPath));
+    memset(m_infoLogPath, 0, sizeof(m_infoLogPath));
+    memset(m_noticeLogPath, 0, sizeof(m_noticeLogPath));
+    memset(m_warnLogPath, 0, sizeof(m_warnLogPath));
+    memset(m_errorLogPath, 0, sizeof(m_errorLogPath));
+
+}
+
+int NormalLogConfig::loadConfig(const char *config_path) {
+    if (NULL == config_path) {
+        printf("config path is NULL\n");
+        return -1;
+    }
+    Config config;
+    if (0 != config.load(config_path)) {
+        printf("config load failed, please check config file[%s]\n", config_path);
+        return -1;
+    }
+    config.GetValue("LOG_SIZE", m_logSize, 10);
+    config.GetValue("LOG_LEVEL", m_maxLevel, LEVEL_MAX);
+    config.GetValue("NORMAL_MODE", m_isNormalModeOn, false);
+    config.GetValue("ASYNC_MODE", m_isAsyncModeOn, false);
+    config.GetValue("NET_MODE", m_isNetModeOn, false);
+    config.GetString("DEBUG_LOG_PATH", m_debugLogPath, "./debug.log");
+    config.GetString("INFO_LOG_PATH", m_infoLogPath, "./info.log");
+    config.GetString("NOTICE_LOG_PATH", m_noticeLogPath, "./notice.log");
+    config.GetString("WARN_LOG_PATH", m_warnLogPath, "./warn.log");
+    config.GetString("ERROR_LOG_PATH", m_errorLogPath, "./error.log");
+    return 0;
+
+}
+
+
 
 
 LogConfig::LogConfig() : 
@@ -78,3 +118,4 @@ const char* LogConfig::getWarnLogPath() {
 const char* LogConfig::getErrorLogPath() {
     return m_errorLogPath;
 }
+

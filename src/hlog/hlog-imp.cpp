@@ -60,9 +60,12 @@ void NormalLogWriter::close() {
 }
 
 
-AsyncLogWriter::AsyncLogWriter() {
-    m_threadPool = NULL;
-    m_isFinish = false;
+AsyncLogWriter::AsyncLogWriter() :
+    m_logMode(ASYNC_MODE),
+    m_threadPool(NULL),
+    m_isFinish(false)
+{ 
+
 }
 
 AsyncLogWriter::~AsyncLogWriter() {
@@ -133,6 +136,11 @@ void AsyncLogWriter::close() {
         iter->second = -1;
     }
 
+}
+NetLogWriter::NetLogWriter() : 
+    m_logMode(ASYNC_MODE) 
+{
+    
 }
 
 int NetLogWriter::init(const LogConfig *log_config) {

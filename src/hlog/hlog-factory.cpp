@@ -1,14 +1,18 @@
 #include <stdio.h>
 #include "hlog-factory.h"
 
-LogWriter* LogWriterFactory::createLogWriter(int type) {
+LogWriter* LogWriterFactory::createLogWriter(LogMode mode) {
     LogWriter *p_log_writer = NULL;
-    if (type == NORMAL_LOG) {
-        p_log_writer = new NormalLogWriter();
-    } else if (type == ASYNC_LOG) {
-        p_log_writer = new AsyncLogWriter();
-    } else if (type == NET_LOG) {
-        p_log_writer = new NetLogWriter();
+    switch (mode) {
+        case NORMAL_MODE:
+            p_log_writer = new NormalLogWriter();
+            break;
+        case ASYNC_MODE:
+            p_log_writer = new AsyncLogWriter();
+            break;
+        case Net_MODE:
+            p_log_writer = new NetLogWriter();
+            break;
     }
     return p_log_writer;
 }

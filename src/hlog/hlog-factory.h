@@ -5,6 +5,6 @@
 
 class LogWriterFactory {
 public:
-    static LogWriter *createLogWriter(int type);
+    static LogWriter *createLogWriter(LogMode mode);
 };
 #endif
