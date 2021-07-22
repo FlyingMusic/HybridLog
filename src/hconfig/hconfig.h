@@ -7,9 +7,11 @@ typedef enum {
     NORMAL_LOG_MANAGER = 0x0,
     ASYNC_LOG_MANAGER,
     NET_LOG_MANAGER,
+    LOG_MANAGER_INIT,
 } ConfigMode;
 
 class HybridConfig {
+public:
     HybridConfig(){ }
     virtual ~HybridConfig() { }
 };
@@ -30,7 +32,7 @@ private:
     int m_logSize;
     int m_maxLevel;
     bool m_isOpen;
-}
+};
 
 class AsyncLogConfig : public HybridConfig {
 public:
@@ -47,7 +49,7 @@ private:
     int m_logSize;
     int m_maxLevel;
     bool m_isOpen;
-}
+};
 
 class NetLogConfig : public HybridConfig {
 public:
@@ -61,6 +63,19 @@ private:
     int m_logSize;
     int m_maxLevel;
     bool m_isOpen;
-}
+};
+
+class LogManagerInitConfig : public HybridConfig {
+public:
+    int loadConfig(const char *config_path);
+    bool getNormalMode();
+    bool getAsyncMode();
+    bool getNetMode();
+private:
+    bool m_isNormalOpen;
+    bool m_isAsyncOpen;
+    bool m_isNetOpen;
+};
+
 
 #endif

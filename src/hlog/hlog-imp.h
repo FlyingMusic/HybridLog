@@ -11,26 +11,24 @@ typedef enum {
     NORMAL_MODE = 0x0,
     ASYNC_MODE,
     NET_MODE,
-    MAX_MODE,
 } LogMode;
 
 class LogWriter {
 public:
     LogWriter() {}
     virtual ~LogWriter() {}
-    virtual int init(const LogConfig *log_config = NULL);
+    virtual int init(const char *config_file = NULL);
     virtual int write(int log_level, const char *log_context);
     virtual void close();
 protected:
     std::map<int, int> m_level2fd;
-    LogConfig *m_logConfig;
     LogMode m_logMode;
 };
 
 class NormalLogWriter : public LogWriter {
 public:
-    NormalLogWriter() : m_logMode(NORMAL_MODE){ }
-    virtual int init(const LogConfig *log_config);
+    NormalLogWriter(){ }
+    virtual int init(const char *config_file);
     virtual int write(int log_level, const char *log_context);
     virtual void close();
 };
@@ -39,7 +37,7 @@ class AsyncLogWriter : public LogWriter {
 public:
     AsyncLogWriter();
     ~AsyncLogWriter();
-    virtual int init(const LogConfig *log_config);
+    virtual int init(const char *config_file);
     virtual int write(int log_level, const char *log_context);
     virtual void close();
     void threadFunc();
@@ -62,7 +60,8 @@ private:
 
 class NetLogWriter : public LogWriter {
 public:
-    virtual int init(const LogConfig *log_config);
+    NetLogWriter();
+    virtual int init(const char *config_path);
     virtual int write(int log_level, const char *log_context);
     virtual void close();
 };
@@ -71,17 +70,15 @@ class LogManager {
 public:
     LogManager();
     ~LogManager();
-    int loadConfig(const char *conf_path);
-    LogConfig* getLogConfig();
-    int addLogWriter(int log_mode);
+    int init(const char *conf_path);
+    int addLogWriter(LogMode log_mode);
     int removeLogWriter(int log_mode);
-    int initLogWriter(const LogConfig *log_config);
+    int initLogWriter();
     void dispatchLog(int log_level, const char *log_context);
     void closeLogWriter();
     typedef std::map<int, LogWriter *>::iterator mapIter;
 private:
     std::map<int, LogWriter *> m_logWriter;
-    LogConfig *m_logConfig;
 };
 
 #endif

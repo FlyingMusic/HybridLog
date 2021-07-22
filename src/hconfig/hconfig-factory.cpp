@@ -9,8 +9,11 @@ HybridConfig* ConfigFactory::getConfig(ConfigMode config_mode) {
         case ASYNC_LOG_MANAGER:
             hconfig = new AsyncLogConfig();
             break;
-        case NORMAL_LOG_MANAGER:
+        case NET_LOG_MANAGER:
             hconfig = new NetLogConfig();
+            break;
+        case LOG_MANAGER_INIT:
+            hconfig = new LogManagerInitConfig();
             break;
     }
     return hconfig;

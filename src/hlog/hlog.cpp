@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include <sys/time.h>
 #include "hlog-imp.h"
+#include "hconfig-factory.h"
 
 static LogManager *g_logMgr = NULL;
 const char *g_level_name[] = {"NO-SET", "DEBUG", "INFO", "NOTICE", "WARN", "ERROR"};
@@ -17,14 +18,19 @@ int hlog_init(const char *conf_file) {
     if (NULL == g_logMgr) {
         g_logMgr = new LogManager(); 
     }
-    int ret = g_logMgr->loadConfig(conf_file);
+    int ret = g_logMgr->init(conf_file);
     if (0 != ret) {
         printf("log manager load config failed\n");
         return -1;
     }
-    const LogConfig* log_config = g_logMgr->getLogConfig();
+    LogManagerInitConfig* log_config = (LogManagerInitConfig*)ConfigFactory::getConfig(LOG_MANAGER_INIT);
     if (NULL == log_config) {
         printf("log config in log manager is NULL\n");
+        return -1;
+    }
+    ret = log_config->loadConfig(conf_file);
+    if (0 != ret) {
+        printf("load config failed in hlog_init\n");
         return -1;
     }
     if (log_config->getNormalMode()) {
@@ -46,7 +52,7 @@ int hlog_init(const char *conf_file) {
         }
     }
 
-    ret = g_logMgr->initLogWriter(log_config);
+    ret = g_logMgr->initLogWriter();
     if (0 != ret) {
         printf("init log writer failed!\n");
     }
@@ -101,7 +107,7 @@ void log_decoder_vv(int level,const char *prefix,const char *func,const char *fm
     return;
 }
 
-void log_decoder_vvv(int level, const char *prefix, const char *func, const char *fmt, ...){
+void log_decoder_vvv(int level, const char *prefix, const char *func, const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
     log_format(level, prefix, func, fmt, ap);
@@ -109,7 +115,7 @@ void log_decoder_vvv(int level, const char *prefix, const char *func, const char
     return;
 }
 
-void close_log(){
+void hlog_close() {
     if (g_logMgr) {
         delete g_logMgr;
         g_logMgr = NULL;

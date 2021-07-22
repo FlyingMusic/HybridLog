@@ -8,11 +8,12 @@
 #include "utility.h"
 #include "hlog-factory.h"
 #include "ThreadPool.h"
+#include "hconfig-factory.h"
 
 
 using namespace std;
 
-int LogWriter::init(const LogConfig *log_config) {
+int LogWriter::init(const char *config_path) {
     return 0;
 }
 int LogWriter::write(int log_level, const char *log_context) {
@@ -22,9 +23,18 @@ void LogWriter::close() {
 }
 
 
-int NormalLogWriter::init(const LogConfig *log_config) {
-    m_logConfig = log_config;
-
+int NormalLogWriter::init(const char *config_path) {
+    NormalLogConfig* log_config = (NormalLogConfig*)ConfigFactory::getConfig(LOG_MANAGER_INIT);
+    if (NULL == log_config) {
+        printf("log config in log manager is NULL\n");
+        return -1;
+    }
+    int ret = log_config->loadConfig(config_path);
+    if (0 != ret) {
+        printf("load config failed in hlog_init\n");
+        return -1;
+    }
+#if 0
     if (false == createDirectory(log_file)) {
         printf("create directory[%s] error in normal log writer\n", log_file);
         return -1;
@@ -35,6 +45,7 @@ int NormalLogWriter::init(const LogConfig *log_config) {
         return -1;
     }
     m_level2fd[log_level] = fd;
+#endif
     return 0;
 }
 int NormalLogWriter::write(int log_level, const char *log_context) {
@@ -61,9 +72,8 @@ void NormalLogWriter::close() {
 
 
 AsyncLogWriter::AsyncLogWriter() :
-    m_logMode(ASYNC_MODE),
-    m_threadPool(NULL),
-    m_isFinish(false)
+    m_isFinish(false),
+    m_threadPool(NULL)
 { 
 
 }
@@ -77,7 +87,8 @@ AsyncLogWriter::~AsyncLogWriter() {
 
 void* thread_func(void *arg);
 
-int AsyncLogWriter::init(const LogConfig *log_config) {
+int AsyncLogWriter::init(const char *config_path) {
+#if 0
     if (false == createDirectory(log_file)) {
         printf("create directory[%s] error in normal log writer\n", log_file);
         return -1;
@@ -88,7 +99,7 @@ int AsyncLogWriter::init(const LogConfig *log_config) {
         return -1;
     }
     m_level2fd[log_level] = fd;
-
+#endif
     if (NULL == m_threadPool) {
         m_threadPool = new ThreadPool(1, (ThreadPoolCallback)thread_func, (void *)this);
         m_threadPool->start();
@@ -137,13 +148,11 @@ void AsyncLogWriter::close() {
     }
 
 }
-NetLogWriter::NetLogWriter() : 
-    m_logMode(ASYNC_MODE) 
-{
+NetLogWriter::NetLogWriter() {
     
 }
 
-int NetLogWriter::init(const LogConfig *log_config) {
+int NetLogWriter::init(const char *config_path) {
     return 0;
 }
 int NetLogWriter::write(int log_level, const char *log_context) {
@@ -154,27 +163,15 @@ void NetLogWriter::close() {
 
 //LogManager
 LogManager::LogManager() {
-    m_logConfig = NULL;
 }
 LogManager::~LogManager() {
     closeLogWriter();
 }
 
-int LogManager::loadConfig(const char *conf_path) {
-    if (NULL == m_logConfig) {
-        m_logConfig = new LogConfig();
-    }
-    int ret = m_logConfig->loadConfig(conf_path);
-    if (0 != ret) {
-        printf("load config failed\n");
-        return -1;
-    }
+int LogManager::init(const char *conf_path) {
     return 0;
 }
-const LogConfig* getLogConfig() {
-    return m_logConfig;
-}
-int LogManager::addLogWriter(int log_mode) {
+int LogManager::addLogWriter(LogMode log_mode) {
     mapIter iter = m_logWriter.find(log_mode);
     if (iter == m_logWriter.end()) {
         m_logWriter[log_mode] = LogWriterFactory::createLogWriter(log_mode);
@@ -193,7 +190,7 @@ int LogManager::removeLogWriter(int log_mode) {
 int LogManager::initLogWriter() {
     mapIter iter = m_logWriter.begin();
     for ( ; iter != m_logWriter.end(); ++iter) {
-        iter->second->init(m_logConfig);
+        iter->second->init();
     }
     return 0;
 }

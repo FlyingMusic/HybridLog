@@ -10,7 +10,7 @@ LogWriter* LogWriterFactory::createLogWriter(LogMode mode) {
         case ASYNC_MODE:
             p_log_writer = new AsyncLogWriter();
             break;
-        case Net_MODE:
+        case NET_MODE:
             p_log_writer = new NetLogWriter();
             break;
     }

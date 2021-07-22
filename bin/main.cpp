@@ -76,6 +76,6 @@ int main(int argc, char *argv[]) {
     clock_t end = clock();
     double costtime = (double)(end - start) / CLOCKS_PER_SEC;
     printf("async time cost: %lf\n", costtime);
-    close_log();
+    hlog_close();
     return 0;
 }
