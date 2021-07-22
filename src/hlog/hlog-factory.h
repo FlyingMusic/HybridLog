@@ -5,6 +5,9 @@
 
 class LogWriterFactory {
 public:
+    static int setDefaultConfig(const char *config_path);
     static LogWriter *createLogWriter(LogMode mode);
+private:
+    char defaut_config[1024];
 };
 #endif

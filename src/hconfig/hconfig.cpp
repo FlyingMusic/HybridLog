@@ -72,6 +72,11 @@ bool NormalLogConfig::isOpen() {
     return m_isOpen;
 }
 
+
+int AsyncLogConfig::loadConfig(const char *config_path) {
+    return 0;
+}
+
 int AsyncLogConfig::getLogSize() {
     return m_logSize;
 }
@@ -80,6 +85,14 @@ int AsyncLogConfig::getMaxLevel() {
     return m_maxLevel;
 }
 
+bool AsyncLogConfig::isOpen() {
+    return m_isOpen;
+}
+
+// NetLogConfig
+int NetLogConfig::loadConfig(const char *config_path) {
+    return 0;
+}
 bool NetLogConfig::isOpen() {
     return m_isOpen;
 }
@@ -91,6 +104,13 @@ int NetLogConfig::getLogSize() {
 int NetLogConfig::getMaxLevel() {
     return m_maxLevel;
 }
+
+
+
+
+
+
+
 
 int LogManagerInitConfig::loadConfig(const char *config_path) {
     return 0;

@@ -14,6 +14,7 @@ class HybridConfig {
 public:
     HybridConfig(){ }
     virtual ~HybridConfig() { }
+    virtual int loadConfig(const char *config_path) = 0;
 };
 
 class NormalLogConfig : public HybridConfig {
