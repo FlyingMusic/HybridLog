@@ -28,7 +28,7 @@ HybridConfig* ConfigFactory::getConfig(ConfigMode config_mode, const char *confi
             hconfig = new LogManagerInitConfig();
             break;
     }
-    const char *config_file = config_path ? m_configFile : config_path;
+    const char *config_file = config_path ? config_path : m_configFile;
     if (hconfig) {
         if (0 != hconfig->loadConfig(config_file)) {
             printf("load config failed in get config\n");

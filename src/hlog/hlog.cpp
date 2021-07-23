@@ -51,7 +51,7 @@ int hlog_init(const char *conf_file) {
             printf("add net logwriter failed\n");
         }
     }
-
+    delete log_config;
     ret = g_logMgr->initLogWriter();
     if (0 != ret) {
         printf("init log writer failed!\n");

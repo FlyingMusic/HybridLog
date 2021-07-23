@@ -105,14 +105,53 @@ int NetLogConfig::getMaxLevel() {
     return m_maxLevel;
 }
 
-
-
-
-
-
-
-
+// LogManagerInitConfig
 int LogManagerInitConfig::loadConfig(const char *config_path) {
+    if (NULL == config_path) {
+        printf("config path is NULL\n");
+        return -1;
+    }
+    Config config;
+    if (0 != config.load(config_path)) {
+        printf("config load failed, please check config file[%s]\n", config_path);
+        return -1;
+    }
+    void *setting = NULL;
+    setting = config.GetSetting("LOG_MODES");
+    int len = 0;
+    if (setting) {
+        config.GetSettingLength(setting, len);
+    }
+
+    for (int i = 0; i < len; i++) {
+        char mode[32] = {0};
+        void *_setting = config.GetSetting(setting, i);
+        config.GetSettingString(_setting, "MODE", mode, "");
+        if (strcasecmp("Normal", mode) == 0){
+            config.GetSettingValue(_setting, "IS_OPEN", m_isNormalOpen, false);
+            continue;
+        }
+        if (strcasecmp("Async", mode) == 0){
+            config.GetSettingValue(_setting, "IS_OPEN", m_isAsyncOpen, false);
+            continue;
+        }
+        if (strcasecmp("Net", mode) == 0){
+            config.GetSettingValue(_setting, "IS_OPEN", m_isNetOpen, false);
+            continue;
+        }
+    }
+#if 0
+    config.GetValue("LOG_SIZE", m_logSize, 10);
+    config.GetValue("LOG_LEVEL", m_maxLevel, LEVEL_MAX);
+    config.GetValue("NORMAL_MODE", m_isNormalModeOn, false);
+    config.GetValue("ASYNC_MODE", m_isAsyncModeOn, false);
+    config.GetValue("NET_MODE", m_isNetModeOn, false);
+    config.GetString("DEBUG_LOG_PATH", m_debugLogPath, "./debug.log");
+    config.GetString("INFO_LOG_PATH", m_infoLogPath, "./info.log");
+    config.GetString("NOTICE_LOG_PATH", m_noticeLogPath, "./notice.log");
+    config.GetString("WARN_LOG_PATH", m_warnLogPath, "./warn.log");
+    config.GetString("ERROR_LOG_PATH", m_errorLogPath, "./error.log");
+#endif 
     return 0;
 }
 
