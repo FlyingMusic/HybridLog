@@ -24,6 +24,11 @@ public:
     int getLogSize();
     int getMaxLevel();
     bool isOpen();
+    char *getDebugPath();
+    char *getInfoPath();
+    char *getNoticePath();
+    char *getWarnPath();
+    char *getErrorPath();
 private:
     char m_debugLogPath[1024];
     char m_infoLogPath[1024];
@@ -41,6 +46,11 @@ public:
     int getLogSize();
     int getMaxLevel();
     bool isOpen();
+    char *getDebugPath();
+    char *getInfoPath();
+    char *getNoticePath();
+    char *getWarnPath();
+    char *getErrorPath();
 private:
     char m_debugLogPath[1024];
     char m_infoLogPath[1024];
@@ -58,6 +68,8 @@ public:
     int getLogSize();
     int getMaxLevel();
     bool isOpen();
+    char *getServerIp();
+    int getServerPort();
 private:
     char m_serverIp[1024];
     char m_serverPort[1024];
