@@ -46,7 +46,7 @@ int NormalLogConfig::loadConfig(const char *config_path) {
             config.GetSettingString(_setting, "INFO_LOG_PATH", m_infoLogPath, "./info.log");
             config.GetSettingString(_setting, "NOTICE_LOG_PATH", m_noticeLogPath, "./notice.log");
             config.GetSettingString(_setting, "WARN_LOG_PATH", m_warnLogPath, "./warn.log");
-            config.GetSettingString(_setting, "ERROR_LOG_PATH", m_debugLogPath, "./error.log");
+            config.GetSettingString(_setting, "ERROR_LOG_PATH", m_errorLogPath, "./error.log");
         }
     }
 
@@ -66,6 +66,25 @@ bool NormalLogConfig::isOpen() {
     return m_isOpen;
 }
 
+char* NormalLogConfig::getDebugPath() {
+    return m_debugLogPath;
+}
+
+char* NormalLogConfig::getInfoPath() {
+    return m_infoLogPath;
+}
+
+char* NormalLogConfig::getNoticePath() {
+    return m_noticeLogPath;
+}
+
+char* NormalLogConfig::getWarnPath() {
+    return m_warnLogPath;
+}
+
+char* NormalLogConfig::getErrorPath() {
+    return m_errorLogPath;
+}
 
 int AsyncLogConfig::loadConfig(const char *config_path) {
     if (NULL == config_path) {
@@ -96,7 +115,7 @@ int AsyncLogConfig::loadConfig(const char *config_path) {
             config.GetSettingString(_setting, "INFO_LOG_PATH", m_infoLogPath, "./info.log");
             config.GetSettingString(_setting, "NOTICE_LOG_PATH", m_noticeLogPath, "./notice.log");
             config.GetSettingString(_setting, "WARN_LOG_PATH", m_warnLogPath, "./warn.log");
-            config.GetSettingString(_setting, "ERROR_LOG_PATH", m_debugLogPath, "./error.log");
+            config.GetSettingString(_setting, "ERROR_LOG_PATH", m_errorLogPath, "./error.log");
         }
     }
 
@@ -114,6 +133,23 @@ int AsyncLogConfig::getMaxLevel() {
 bool AsyncLogConfig::isOpen() {
     return m_isOpen;
 }
+
+char* AsyncLogConfig::getInfoPath() {
+    return m_infoLogPath;
+}
+
+char* AsyncLogConfig::getNoticePath() {
+    return m_noticeLogPath;
+}
+
+char* AsyncLogConfig::getWarnPath() {
+    return m_warnLogPath;
+}
+
+char* AsyncLogConfig::getErrorPath() {
+    return m_errorLogPath;
+}
+
 
 // NetLogConfig
 int NetLogConfig::loadConfig(const char *config_path) {
@@ -141,12 +177,10 @@ int NetLogConfig::loadConfig(const char *config_path) {
             config.GetSettingValue(_setting, "IS_OPEN", m_isOpen, false);
             config.GetSettingValue(_setting, "LOG_SIZE", m_logSize, 5);
             config.GetSettingValue(_setting, "LOG_LEVEL", m_maxLevel, 5);
-            config.GetSettingString(_setting, "IP", m_ip, "127.0.0.1");
-            config.GetSettingValue(_setting, "PORT", m_port, 5555);
+            config.GetSettingString(_setting, "IP", m_serverIp, "127.0.0.1");
+            config.GetSettingValue(_setting, "PORT", m_serverPort, 5555);
         }
     }
-
-
 
     return 0;
 }

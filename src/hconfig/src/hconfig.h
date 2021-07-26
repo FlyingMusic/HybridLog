@@ -72,7 +72,7 @@ public:
     int getServerPort();
 private:
     char m_serverIp[1024];
-    char m_serverPort[1024];
+    int m_serverPort;
     int m_logSize;
     int m_maxLevel;
     bool m_isOpen;
