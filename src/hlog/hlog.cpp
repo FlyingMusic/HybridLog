@@ -18,12 +18,17 @@ int hlog_init(const char *conf_file) {
     if (NULL == g_logMgr) {
         g_logMgr = new LogManager(); 
     }
-    int ret = g_logMgr->init(conf_file);
+    int ret = g_logMgr->init();
     if (0 != ret) {
         printf("log manager load config failed\n");
         return -1;
     }
-    LogManagerInitConfig* log_config = (LogManagerInitConfig*)ConfigFactory::getConfig(LOG_MANAGER_INIT);
+    ret = ConfigFactory::setConfigFile(conf_file);
+    if (0 != ret) {
+        printf("set default config file failed\n");
+        return -1;
+    }
+    LogManagerInitConfig* log_config = dynamic_cast<LogManagerInitConfig*>(ConfigFactory::getConfig(LOG_MANAGER_INIT));
     if (NULL == log_config) {
         printf("log config in log manager is NULL\n");
         return -1;

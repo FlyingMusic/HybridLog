@@ -17,7 +17,7 @@ class LogWriter {
 public:
     LogWriter() {}
     virtual ~LogWriter() {}
-    virtual int init(const char *config_file = NULL);
+    virtual int init();
     virtual int write(int log_level, const char *log_context);
     virtual void close();
 protected:
@@ -28,7 +28,7 @@ protected:
 class NormalLogWriter : public LogWriter {
 public:
     NormalLogWriter(){ }
-    virtual int init(const char *config_file);
+    virtual int init();
     virtual int write(int log_level, const char *log_context);
     virtual void close();
 };
@@ -37,7 +37,7 @@ class AsyncLogWriter : public LogWriter {
 public:
     AsyncLogWriter();
     ~AsyncLogWriter();
-    virtual int init(const char *config_file);
+    virtual int init();
     virtual int write(int log_level, const char *log_context);
     virtual void close();
     void threadFunc();
@@ -61,7 +61,7 @@ private:
 class NetLogWriter : public LogWriter {
 public:
     NetLogWriter();
-    virtual int init(const char *config_path);
+    virtual int init();
     virtual int write(int log_level, const char *log_context);
     virtual void close();
 };
@@ -70,7 +70,7 @@ class LogManager {
 public:
     LogManager();
     ~LogManager();
-    int init(const char *conf_path);
+    int init();
     int addLogWriter(LogMode log_mode);
     int removeLogWriter(int log_mode);
     int initLogWriter();

@@ -13,7 +13,7 @@
 
 using namespace std;
 
-int LogWriter::init(const char *config_path) {
+int LogWriter::init() {
     return 0;
 }
 int LogWriter::write(int log_level, const char *log_context) {
@@ -23,15 +23,10 @@ void LogWriter::close() {
 }
 
 
-int NormalLogWriter::init(const char *config_path) {
+int NormalLogWriter::init() {
     NormalLogConfig* log_config = (NormalLogConfig*)ConfigFactory::getConfig(LOG_MANAGER_INIT);
     if (NULL == log_config) {
         printf("log config in log manager is NULL\n");
-        return -1;
-    }
-    int ret = log_config->loadConfig(config_path);
-    if (0 != ret) {
-        printf("load config failed in hlog_init\n");
         return -1;
     }
 #if 0
@@ -87,7 +82,7 @@ AsyncLogWriter::~AsyncLogWriter() {
 
 void* thread_func(void *arg);
 
-int AsyncLogWriter::init(const char *config_path) {
+int AsyncLogWriter::init() {
 #if 0
     if (false == createDirectory(log_file)) {
         printf("create directory[%s] error in normal log writer\n", log_file);
@@ -152,7 +147,7 @@ NetLogWriter::NetLogWriter() {
     
 }
 
-int NetLogWriter::init(const char *config_path) {
+int NetLogWriter::init() {
     return 0;
 }
 int NetLogWriter::write(int log_level, const char *log_context) {
@@ -168,7 +163,7 @@ LogManager::~LogManager() {
     closeLogWriter();
 }
 
-int LogManager::init(const char *conf_path) {
+int LogManager::init() {
     return 0;
 }
 int LogManager::addLogWriter(LogMode log_mode) {

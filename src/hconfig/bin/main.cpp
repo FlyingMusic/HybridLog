@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
         return -1;
     }
     //LogManagerInitConfig
-    LogManagerInitConfig *init_config = (LogManagerInitConfig*)ConfigFactory::getConfig(LOG_MANAGER_INIT);
+    LogManagerInitConfig *init_config = dynamic_cast<LogManagerInitConfig*>(ConfigFactory::getConfig(LOG_MANAGER_INIT));
     if (NULL == init_config) {
         printf("get config failed!\n");
         return -1; 
@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
     delete init_config;
 
     //NormalLogConfig
-    NormalLogConfig *normal_config = (NormalLogConfig*)ConfigFactory::getConfig(NORMAL_LOG_MANAGER);
+    NormalLogConfig *normal_config = dynamic_cast<NormalLogConfig*>(ConfigFactory::getConfig(NORMAL_LOG_MANAGER));
     if (NULL == normal_config) {
         printf("get config failed!\n");
         return -1; 
