@@ -29,7 +29,9 @@ int NormalLogWriter::init() {
         printf("log config in log manager is NULL\n");
         return -1;
     }
-#if 0
+    //TODO:
+    //创建log文件，需要根据等级，但是各种等级的接口是区分开的，没办法用循环来做怎么办
+    const char *log_file = log_config->getDebugPath();
     if (false == createDirectory(log_file)) {
         printf("create directory[%s] error in normal log writer\n", log_file);
         return -1;
@@ -40,7 +42,6 @@ int NormalLogWriter::init() {
         return -1;
     }
     m_level2fd[log_level] = fd;
-#endif
     return 0;
 }
 int NormalLogWriter::write(int log_level, const char *log_context) {

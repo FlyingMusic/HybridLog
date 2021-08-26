@@ -1,7 +1,7 @@
 #ifndef _HYBRID_LOG_INC_
 #define _HYBRID_LOG_INC_
 
-typedef enum HLOG_LEVEL {
+typedef enum HLOG_LEVEL_ {
     LEVEL_NOTSET = 0x00,
     LEVEL_DEBUG,
     LEVEL_INFO,
@@ -9,7 +9,7 @@ typedef enum HLOG_LEVEL {
     LEVEL_WARN,
     LEVEL_ERROR,
     LEVEL_MAX
-} DLOG_LEVEL;
+} HLOG_LEVEL;
 
 void log_decoder_v(int level, const char *fmt, ...);
 void log_decoder_vv(int level, const char *prefix, const char *func, const char *fmt, ...);
